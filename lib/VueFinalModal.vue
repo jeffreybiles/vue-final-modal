@@ -708,7 +708,6 @@ export default {
       window.removeEventListener('resize', screenResized)
     }
     function screenResized() {
-      console.log('resizing to null')
       dragResizeStyle.value = {
         top: '0px',
         left: '0px'
