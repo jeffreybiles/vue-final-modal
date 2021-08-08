@@ -201,6 +201,7 @@ export default {
     const dragResizeStyle = ref({})
     const _state = ref(null)
     const lastMousedownEl = ref(null)
+    const lastScreenSize = ref({})
 
     let resolveToggle = noop
     let rejectToggle = noop
@@ -360,6 +361,9 @@ export default {
           rejectToggle('show')
           return
         }
+
+        const { width, height } = vfmContainer.value.getBoundingClientRect()
+        lastScreenSize.value = { width, height }
 
         let target = getAttachElement()
         if (target || props.attach === false) {
@@ -708,9 +712,17 @@ export default {
       window.removeEventListener('resize', screenResized)
     }
     function screenResized() {
-      dragResizeStyle.value = {
-        top: '0px',
-        left: '0px'
+      const { width, height } = vfmContainer.value.getBoundingClientRect()
+      const isFakeIosResize = width === lastScreenSize.value.width && width === lastScreenSize.value.height
+      if (!isFakeIosResize) {
+        lastScreenSize.value = {
+          width,
+          height
+        }
+        dragResizeStyle.value = {
+          top: '0px',
+          left: '0px'
+        }
       }
     }
     function getResizeOffset(direction, offset, rectContainer, rectContent, isAbsolute) {
