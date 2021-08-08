@@ -153,6 +153,7 @@ export default {
       validator: val =>
         ['t', 'tr', 'r', 'br', 'b', 'bl', 'l', 'tl'].filter(value => val.indexOf(value) !== -1).length === val.length
     },
+    resetOnScreenResize: { type: Boolean, default: false },
     minWidth: { type: Number, default: 0 },
     minHeight: { type: Number, default: 0 },
     maxWidth: { type: Number, default: Infinity },
@@ -307,6 +308,14 @@ export default {
       val => {
         if (!val) {
           dragResizeStyle.value = {}
+        }
+      }
+    )
+    watch(
+      () => props.resetOnScreenResize,
+      val => {
+        if (val) {
+          val ? addScreenResizing() : removeScreenResizing()
         }
       }
     )
@@ -468,6 +477,7 @@ export default {
       props.focusTrap && $focusTrap.enable(vfmContainer.value)
       props.drag && addDragDown()
       props.resize && addResizeDown()
+      props.resetOnScreenResize && addScreenResizing()
 
       emit('_opened')
       emit('opened', createModalEvent({ type: 'opened' }))
@@ -690,6 +700,19 @@ export default {
     function removeResizeDown() {
       removeListener('down', vfmResize.value, pointerDown)
       visibility.resize = false
+    }
+    function addScreenResizing() {
+      window.addEventListener('resize', screenResized)
+    }
+    function removeScreenResizing() {
+      window.removeEventListener('resize', screenResized)
+    }
+    function screenResized() {
+      dragResizeStyle.value = {
+        ...dragResizeStyle.value,
+        top: '0px',
+        left: '0px'
+      }
     }
     function getResizeOffset(direction, offset, rectContainer, rectContent, isAbsolute) {
       const setOffset = dir => {
