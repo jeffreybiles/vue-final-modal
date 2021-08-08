@@ -708,10 +708,13 @@ export default {
       window.removeEventListener('resize', screenResized)
     }
     function screenResized() {
+      console.log('resizing')
       dragResizeStyle.value = {
         ...dragResizeStyle.value,
         top: '0px',
-        left: '0px'
+        left: '0px',
+        width: '0px',
+        height: '0px'
       }
     }
     function getResizeOffset(direction, offset, rectContainer, rectContent, isAbsolute) {
