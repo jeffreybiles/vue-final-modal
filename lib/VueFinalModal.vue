@@ -719,15 +719,6 @@ export default {
       const isSameWidth = width == lastScreenSize.value.width
       const isSameHeight = height == lastScreenSize.value.height
       const isFakeIosResize = isSameWidth && isSameHeight
-      console.log(
-        isFakeIosResize,
-        isSameWidth,
-        width,
-        lastScreenSize.value.width,
-        isSameHeight,
-        height,
-        lastScreenSize.value.height
-      )
       if (!isFakeIosResize) {
         lastScreenSize.value = {
           width,
