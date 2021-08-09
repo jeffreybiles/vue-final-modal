@@ -201,7 +201,10 @@ export default {
     const dragResizeStyle = ref({})
     const _state = ref(null)
     const lastMousedownEl = ref(null)
-    const lastScreenSize = ref({})
+    const lastScreenSize = ref({
+      width: null,
+      height: null
+    })
 
     let resolveToggle = noop
     let rejectToggle = noop
@@ -362,9 +365,6 @@ export default {
           return
         }
 
-        const { width, height } = vfmContainer.value.getBoundingClientRect()
-        lastScreenSize.value = { width, height }
-
         let target = getAttachElement()
         if (target || props.attach === false) {
           props.attach !== false && target.appendChild(root.value)
@@ -482,6 +482,9 @@ export default {
       props.drag && addDragDown()
       props.resize && addResizeDown()
       props.resetOnScreenResize && addScreenResizing()
+
+      const { width, height } = vfmContainer.value.getBoundingClientRect()
+      lastScreenSize.value = { width, height }
 
       emit('_opened')
       emit('opened', createModalEvent({ type: 'opened' }))
@@ -713,8 +716,18 @@ export default {
     }
     function screenResized() {
       const { width, height } = vfmContainer.value.getBoundingClientRect()
-      const isFakeIosResize = width == lastScreenSize.value.width && height == lastScreenSize.value.height
-      console.log(isFakeIosResize, width, lastScreenSize.value.width, height, lastScreenSize.value.height)
+      const isSameWidth = width == lastScreenSize.value.width
+      const isSameHeight = height == lastScreenSize.value.height
+      const isFakeIosResize = isSameWidth && isSameHeight
+      console.log(
+        isFakeIosResize,
+        isSameWidth,
+        width,
+        lastScreenSize.value.width,
+        isSameHeight,
+        height,
+        lastScreenSize.value.height
+      )
       if (!isFakeIosResize) {
         lastScreenSize.value = {
           width,
