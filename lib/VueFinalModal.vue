@@ -714,6 +714,7 @@ export default {
     function screenResized() {
       const { width, height } = vfmContainer.value.getBoundingClientRect()
       const isFakeIosResize = width === lastScreenSize.value.width && width === lastScreenSize.value.height
+      console.log(isFakeIosResize, width, height)
       if (!isFakeIosResize) {
         lastScreenSize.value = {
           width,
